@@ -41,6 +41,7 @@ As próximas etapas incluem a divisão dos dados em treino, validação e teste,
 │   └── POSTECH - Tech Challenge - Fase 1.pdf
 ├── checklist.md
 ├── tech-challenge.ipynb
+├── Relatorio_Tecnico_Tech_Challenge_Fase1_v1.docx
 └── README.md
 ```
 
