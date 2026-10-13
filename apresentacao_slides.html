@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apresentação Tech Challenge — Fase 1 | FIAP Pós-Tech — IA para Devs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at 15% 25%, #0d1b2e 0%, #060913 90%);
+      --card-bg: rgba(15, 23, 42, 0.78);
+      --card-border: rgba(56, 189, 248, 0.2);
+      --accent-cyan: #38bdf8;
+      --accent-blue: #3b82f6;
+      --accent-green: #10b981;
+      --accent-purple: #8b5cf6;
+      --accent-red: #f43f5e;
+      --accent-amber: #f59e0b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      background: rgba(6, 9, 19, 0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      color: #060913;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-main);
+      padding: 7px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: var(--accent-cyan);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      color: #060913;
+      font-weight: 800;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.5);
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 20%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      transition: width 0.35s ease;
+    }
+
+    /* Deck Container */
+    .deck {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 4rem;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 2rem 4rem;
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 3.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.97) translateY(16px);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7);
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1) translateY(0);
+      z-index: 10;
+    }
+
+    /* Typography */
+    .slide-tag {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .slide-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #ffffff 30%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.4rem;
+    }
+
+    .slide-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .slide-content-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.2rem;
+      align-items: stretch;
+    }
+
+    .slide-content-single {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 2rem;
+    }
+
+    .info-card {
+      background: rgba(10, 15, 29, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 16px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .info-card h3 {
+      font-size: 1.35rem;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .info-card p, .info-card li {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: #cbd5e1;
+    }
+
+    .info-card ul {
+      padding-left: 1.3rem;
+    }
+
+    .highlight-box {
+      background: rgba(56, 189, 248, 0.08);
+      border-left: 4px solid var(--accent-cyan);
+      padding: 1.2rem;
+      border-radius: 8px;
+    }
+
+    .team-badge-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 0.5rem;
+    }
+
+    .member-badge {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 7px 14px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .rm-tag {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    /* Transition Card (Slide 3) */
+    .transition-card {
+      background: radial-gradient(circle at 50% 50%, rgba(30, 58, 138, 0.4) 0%, rgba(15, 23, 42, 0.8) 100%);
+      border: 2px dashed var(--accent-cyan);
+      border-radius: 20px;
+      padding: 3rem 4rem;
+      max-width: 900px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 0 35px rgba(56, 189, 248, 0.15);
+    }
+
+    .transition-icon {
+      font-size: 3.5rem;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .step-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      width: 100%;
+      margin-top: 1rem;
+      text-align: left;
+    }
+
+    .step-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      font-size: 0.95rem;
+    }
+
+    .step-item strong {
+      color: var(--accent-cyan);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    /* Metrics Grid (Slide 4) */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .metric-item {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1.2rem;
+      text-align: center;
+    }
+
+    .metric-number {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+    }
+
+    .metric-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-top: 0.3rem;
+    }
+
+    /* Footer */
+    .footer-bar {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 3rem;
+      background: rgba(6, 9, 19, 0.9);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .kbd {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="brand">
+      <span class="brand-badge">FIAP PÓS-TECH</span>
+      <span>Tech Challenge — Fase 1: Diagnóstico de Câncer de Mama</span>
+    </div>
+    <div class="controls">
+      <button class="btn" onclick="toggleFullscreen()">⛶ Tela Cheia [F]</button>
+      <button class="btn" onclick="prevSlide()">◀ Anterior</button>
+      <span id="slide-num" style="font-weight: 700; color: var(--accent-cyan); min-width: 48px; text-align: center;">1 / 5</span>
+      <button class="btn btn-primary" onclick="nextSlide()">Próximo ▶</button>
+    </div>
+  </div>
+
+  <div class="progress-bar-container">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+
+  <!-- Deck Area -->
+  <div class="deck">
+
+    <!-- ========================================== -->
+    <!-- SLIDE 1: APRESENTAÇÃO DO GRUPO E PROJETO -->
+    <!-- ========================================== -->
+    <div class="slide active" id="slide-1">
+      <div class="slide-tag">🎓 Entrega Prática • Fase 1</div>
+      <h1 class="slide-title">Sistema Inteligente de Suporte ao Diagnóstico</h1>
+      <div class="slide-subtitle">Classificação de Tumores Mamários com Machine Learning Supervisionado</div>
+      
+      <div class="slide-content-grid">
+        <div class="info-card">
+          <h3>👥 Integrantes do Grupo</h3>
+          <p>Projeto acadêmico desenvolvido para a pós-graduação em IA para Devs:</p>
+          <div class="team-badge-container">
+            <div class="member-badge">
+              <span>👤 <strong>Davi de Aquino Barbosa</strong></span>
+              <span class="rm-tag">RM 375716</span>
+            </div>
+            <div class="member-badge">
+              <span>👤 <strong>Douglas Martins de Medeiros Costa</strong></span>
+              <span class="rm-tag">RM 377136</span>
+            </div>
+            <div class="member-badge">
+              <span>👤 <strong>Everton de Souza</strong></span>
+              <span class="rm-tag">RM 377988</span>
+            </div>
+            <div class="member-badge">
+              <span>👤 <strong>Elton dos Santos</strong></span>
+              <span class="rm-tag">RM 376425</span>
+            </div>
+            <div class="member-badge">
+              <span>👤 <strong>Luiz Ricardo Marquesete de Barros</strong></span>
+              <span class="rm-tag">RM 376994</span>
+            </div>
+          </div>
+          <div class="highlight-box" style="margin-top: 1rem;">
+            <p style="font-size: 0.95rem;"><strong>Curso:</strong> Pós-Tech - IA para Devs</p>
+            <p style="font-size: 0.95rem;"><strong>Instituição:</strong> FIAP</p>
+            <p style="font-size: 0.95rem;"><strong>Repositório:</strong> fiap-tech-challenge-fase01</p>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <h3>🩺 Visão Geral do Entregável</h3>
+          <p>Construção de uma solução computacional completa de Machine Learning para a triagem de biópsias mamárias a partir de dados celulares morfométricos.</p>
+          <ul>
+            <li><strong>Dataset:</strong> <em>Breast Cancer Wisconsin (Diagnostic)</em></li>
+            <li><strong>Volume de Amostras:</strong> 569 casos com 30 características clínicas</li>
+            <li><strong>Alvo:</strong> Classificação binária entre <strong>Benigno (0)</strong> e <strong>Maligno (1)</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SLIDE 2: A SITUAÇÃO PROBLEMA DO HOSPITAL  -->
+    <!-- ========================================== -->
+    <div class="slide" id="slide-2">
+      <div class="slide-tag">🏥 Contexto de Negócio & Medicina</div>
+      <h1 class="slide-title">A Situação Problema do Hospital Universitário</h1>
+      <div class="slide-subtitle">O Gargalo nas Filas de Laudos Anatomopatológicos e o Papel da IA</div>
+
+      <div class="slide-content-grid">
+        <div class="info-card">
+          <h3>🚨 O Desafio Hospitalar</h3>
+          <p>O hospital universitário lida com um <strong>volume massivo e crescente de exames e biópsias aspirativas</strong>. O atraso na emissão de laudos de casos suspeitos atrasa o início da quimioterapia e cirurgias.</p>
+          <ul>
+            <li><strong>Sobrecarga Médica:</strong> Equipe de patologistas sobrecarregada com exames de rotina.</li>
+            <li><strong>Risco Clínico:</strong> Casos graves misturados na fila geral sem priorização.</li>
+            <li><strong>Necessidade:</strong> Uma ferramenta inteligente para triagem rápida e ordenação de prioridade.</li>
+          </ul>
+        </div>
+
+        <div class="info-card" style="border-left: 4px solid var(--accent-cyan);">
+          <h3>⚖️ Filosofia Médica & Métrica Crítica</h3>
+          <p><strong>Apoio à decisão clínica, jamais substituição:</strong> A palavra final sobre o diagnóstico é inegociavelmente do médico especialista.</p>
+          <div class="highlight-box">
+            <h4 style="color: var(--accent-red); margin-bottom: 0.4rem; font-size: 1.05rem;">Prioridade Máxima: Maximizar o Recall (Sensibilidade)</h4>
+            <p style="font-size: 0.95rem;">Um <strong>Falso Positivo</strong> gera ansiedade, mas é corrigido em exame confirmatório. Já um <strong>Falso Negativo</strong> deixa uma paciente com câncer sem tratamento urgente. Por isso, nosso foco é <em>zerar os falsos negativos</em>!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SLIDE 3: TRANSIÇÃO PARA O NOTEBOOK        -->
+    <!-- ========================================== -->
+    <div class="slide" id="slide-3">
+      <div class="slide-tag">💻 Demonstração Prática</div>
+      <h1 class="slide-title">Transição para o Notebook de Execução</h1>
+      <div class="slide-subtitle">Demonstração Interativa do Pipeline de Dados e Algoritmos</div>
+
+      <div class="slide-content-single">
+        <div class="transition-card">
+          <div class="transition-icon">🚀</div>
+          <h2 style="font-size: 1.8rem; color: #fff;">Vamos agora ao Jupyter Notebook!</h2>
+          <p style="font-size: 1.15rem; color: #cbd5e1; max-width: 700px;">
+            Apresentaremos a execução em tempo real do arquivo <strong style="color: var(--accent-cyan);">apresentacao_tech_challenge.ipynb</strong>, comprovando a integridade das 49 células de código e a ausência de vazamento de dados.
+          </p>
+
+          <div class="step-list">
+            <div class="step-item">
+              <strong>1. Higienização</strong>
+              Remoção de 'id' e nulos
+            </div>
+            <div class="step-item">
+              <strong>2. Análise Visual (EDA)</strong>
+              Outliers e correlações
+            </div>
+            <div class="step-item">
+              <strong>3. Split com Stratify</strong>
+              Treino 60%, Val 20%, Teste 20%
+            </div>
+            <div class="step-item">
+              <strong>4. Pipelines de ML</strong>
+              Regressão Logística & KNN
+            </div>
+            <div class="step-item">
+              <strong>5. Validação K=5</strong>
+              Experimento das 30 vs 10 features
+            </div>
+            <div class="step-item">
+              <strong>6. Teste Final Cego</strong>
+              Matrizes de confusão e métricas
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SLIDE 4: CONCLUSÕES CLÍNICAS E RESULTADOS -->
+    <!-- ========================================== -->
+    <div class="slide" id="slide-4">
+      <div class="slide-tag">📊 Conclusão Técnica & Médica</div>
+      <h1 class="slide-title">Conclusões Clínicas e Viabilidade Prática</h1>
+      <div class="slide-subtitle">O que Comprovamos na Prática e Como Implantar no Hospital</div>
+
+      <div class="slide-content-grid">
+        <div class="info-card">
+          <h3>🏆 Modelo Vencedor: Regressão Logística</h3>
+          <p>No conjunto de teste cego de 114 pacientes, a Regressão Logística superou expressivamente o KNN:</p>
+          <div class="metric-grid">
+            <div class="metric-item">
+              <div class="metric-number">97,4%</div>
+              <div class="metric-title">Acurácia Global</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-number" style="color: var(--accent-green);">95,2%</div>
+              <div class="metric-title">Recall Maligno</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-number" style="color: var(--accent-red);">2 vs 5</div>
+              <div class="metric-title">Falsos Negativos</div>
+            </div>
+          </div>
+          <p style="font-size: 0.95rem; margin-top: 0.5rem;"><strong>Explicabilidade:</strong> A variável <code>texture_worst</code> (+1,35) foi a mais determinante, refletindo fielmente a desorganização da cromatina tumoral.</p>
+        </div>
+
+        <div class="info-card" style="border: 1px solid var(--accent-green);">
+          <h3 style="color: var(--accent-green);">🏥 Viabilidade de Uso no Hospital</h3>
+          <ul>
+            <li><strong>Triagem Automática:</strong> Exames com probabilidade &gt; 50% de malignidade sobem instantaneamente para o topo da fila prioritária do patologista.</li>
+            <li><strong>Segunda Opinião:</strong> Disparo de alerta em tela quando a hipótese diagnóstica preliminar divergir da previsão da IA.</li>
+            <li><strong>Segurança:</strong> O médico visualiza os coeficientes que justificam o score do algoritmo antes de assinar o laudo.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SLIDE 5: AGRADECIMENTO & ENCERRAMENTO     -->
+    <!-- ========================================== -->
+    <div class="slide" id="slide-5">
+      <div class="slide-tag">🏁 Encerramento • FIAP Pós-Tech</div>
+      <h1 class="slide-title">Próximos Passos & Muito Obrigado!</h1>
+      <div class="slide-subtitle">Tech Challenge — Fase 1 Concluído com Sucesso</div>
+
+      <div class="slide-content-single">
+        <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--card-border); padding: 2.5rem 3.5rem; border-radius: 20px; max-width: 800px; text-align: center;">
+          <h2 style="font-size: 2.2rem; color: var(--accent-cyan); margin-bottom: 1rem;">Obrigado pela Atenção!</h2>
+          <p style="font-size: 1.15rem; color: #cbd5e1; line-height: 1.7; margin-bottom: 1.5rem;">
+            Apresentamos um pipeline de Machine Learning robusto, livre de data leakage, com métricas validadas no teste cego e total responsabilidade médica.
+          </p>
+
+          <div style="display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <div style="background: rgba(255,255,255,0.06); padding: 1rem 1.5rem; border-radius: 10px; font-size: 0.95rem;">
+              📁 <strong>Repositório Git:</strong> Código estruturado
+            </div>
+            <div style="background: rgba(255,255,255,0.06); padding: 1rem 1.5rem; border-radius: 10px; font-size: 0.95rem;">
+              📄 <strong>Relatório Técnico:</strong> Justificativas e métricas
+            </div>
+            <div style="background: rgba(255,255,255,0.06); padding: 1rem 1.5rem; border-radius: 10px; font-size: 0.95rem;">
+              🎥 <strong>Vídeo:</strong> Demonstração prática
+            </div>
+          </div>
+
+          <div style="background: rgba(139, 92, 246, 0.12); border: 1px solid var(--accent-purple); padding: 1rem; border-radius: 10px; color: #e2e8f0; font-size: 0.95rem;">
+            🚀 <strong>Próximos Passos (Desafio Extra):</strong> Integração com Visão Computacional (Rede Convolucional / CNN) para análise direta de imagens mamográficas e lâminas histopatológicas.
+          </div>
+
+          <div style="margin-top: 1.2rem; font-size: 0.88rem; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1rem;">
+            <strong>Integrantes do Grupo:</strong> Davi Barbosa (RM 375716) • Douglas Costa (RM 377136) • Everton de Souza (RM 377988) • Elton dos Santos (RM 376425) • Luiz Ricardo Marquesete (RM 376994)
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer Bar -->
+  <div class="footer-bar">
+    <div>Navegue com as setas <span class="kbd">◀</span> <span class="kbd">▶</span> ou <span class="kbd">Espaço</span> | Tela Cheia: <span class="kbd">F</span></div>
+    <div>FIAP Pós-Tech • IA para Devs</div>
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 5;
+
+    function updateSlide() {
+      document.querySelectorAll('.slide').forEach((slide, idx) => {
+        slide.classList.toggle('active', idx + 1 === currentSlide);
+      });
+
+      document.getElementById('slide-num').textContent = `${currentSlide} / ${totalSlides}`;
+      document.getElementById('progress-bar').style.width = `${(currentSlide / totalSlides) * 100}%`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        currentSlide = 1;
+        updateSlide();
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        currentSlide = totalSlides;
+        updateSlide();
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullscreen();
+      }
+    });
+
+    updateSlide();
+  </script>
+</body>
+</html>
