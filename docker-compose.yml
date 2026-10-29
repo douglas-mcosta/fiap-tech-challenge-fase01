@@ -1,0 +1,12 @@
+services:
+  tumores:
+    build: .
+    image: tech-challenge-tumores:latest
+    ports:
+      - "8501:8501"
+
+  pneumonia:
+    build: desafio-visao-computacional
+    image: tech-challenge-pneumonia:latest
+    ports:
+      - "8502:8501"

@@ -1,0 +1,12 @@
+.git
+.vs
+env/
+.env
+__pycache__/
+*.pyc
+models/
+*.docx
+*.pdf
+*.html
+desafio-visao-computacional/
+requisitos/
