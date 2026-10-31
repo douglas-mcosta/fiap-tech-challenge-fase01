@@ -65,7 +65,7 @@ O projeto é entregue em **duas imagens independentes**, uma para cada desafio. 
 
 | Desafio | Imagem | Endereço |
 |---|---|---|
-| Classificação de tumores mamários (Regressão Logística) | `ghcr.io/douglas-mcosta/tech-challenge-tumores` | http://localhost:8501 |
+| Classificação de tumores mamários (Regressão Logística e KNN) | `ghcr.io/douglas-mcosta/tech-challenge-tumores` | http://localhost:8501 |
 | Detecção de pneumonia em raio-X (CNN) | `ghcr.io/douglas-mcosta/tech-challenge-pneumonia` | http://localhost:8502 |
 
 ### Tumores mamários
