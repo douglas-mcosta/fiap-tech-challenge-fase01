@@ -169,6 +169,13 @@ jupyter notebook tech-challenge.ipynb
 
 Execute as células em ordem para reproduzir a análise.
 
+## Execução adicional por Notebook Colab (se necessário)
+
+| Desafio  | Endereço |
+|---|---|
+| Tarefa principal -Classificação de tumores mamários (Regressão Logística e KNN) | https://colab.research.google.com/drive/1GL6NSUKcgPTa72Q3Nir3c4PeFhADeiqv?usp=sharing |
+| EXTRA - Detecção de pneumonia em raio-X (CNN) | https://colab.research.google.com/drive/18w8GcFMcdsJVtHa9ulLU74akaCpIFGJk |
+
 ## Dataset
 
 O dataset utilizado está disponível no Kaggle:
